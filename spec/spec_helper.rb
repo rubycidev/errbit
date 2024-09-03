@@ -1,5 +1,22 @@
 # This file is copied to ~/spec when you run 'ruby script/generate rspec'
 # from the project root directory.
+if ENV["RUBY_CI_SECRET_KEY"]
+  require "rspec/core/runner"
+  require "ruby_ci/runner_prepend"
+
+  class RSpec::Core::ExampleGroup
+    def self.filtered_examples
+      rubyci_scoped_ids = Thread.current[:rubyci_scoped_ids] || ""
+
+      RSpec.world.filtered_examples[self].filter do |ex|
+        rubyci_scoped_ids == "" || /^#{rubyci_scoped_ids}($|:)/.match?(ex.metadata[:scoped_id])
+      end
+    end
+  end
+
+  RSpec::Core::Runner.prepend(RubyCI::RunnerPrepend)
+end
+
 ENV["RAILS_ENV"] = 'test'
 ENV["ERRBIT_LOG_LEVEL"] = 'fatal'
 ENV["ERRBIT_USER_HAS_USERNAME"] = 'false'
