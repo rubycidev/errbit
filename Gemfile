@@ -58,8 +58,6 @@ gem 'bigdecimal', '~> 1.4.4'
 
 gem 'pry-rails'
 
-gem "ruby_ci"
-
 group :development, :test do
   gem 'airbrake', '~> 4.3.5', require: false
   gem 'rubocop', '~> 0.71.0', require: false
@@ -89,6 +87,7 @@ group :test do
   gem 'email_spec'
   gem 'timecop'
   gem 'coveralls', require: false
+  gem "ruby_ci"
 end
 
 group :no_docker, :test, :development do
